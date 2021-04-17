@@ -18,7 +18,7 @@ import (
 func main() {
 	fmt.Println("[Server] Initializing ...")
 
-	loadEnvironment();
+	loadEnvironment()
 
 	todoRepo := selectDatabase()
 
@@ -50,7 +50,7 @@ func loadEnvironment() {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Println("[Warning] Não foi possível carregar o .env")
+		log.Println("[Warning] The .env file could not be loaded")
 	}
 }
 
