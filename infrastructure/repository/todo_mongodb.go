@@ -52,30 +52,32 @@ func (r *MongoDb) List() ([]*entity.Todo, error) {
 		return tasks, err
 	}
 
-	for cur.Next(ctx) {
-		var t entity.Todo
-		err := cur.Decode(&t)
-		if err != nil {
-			return tasks, err
-		}
+	todos, err := addToList(cur, &tasks)
 
-		tasks = append(tasks, &t)
+	if err != nil {
+		return todos, err
 	}
 
-	if err := cur.Err(); err != nil {
-		return tasks, err
-	}
-
-	// once exhausted, close the cursor
-	erre := cur.Close(ctx)
-	if erre != nil {
-		return nil, erre
-	}
-
-	if len(tasks) == 0 {
-		return tasks, mongo.ErrNoDocuments
+	err = cur.Close(ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	return tasks, nil
 }
 
+func addToList(cur *mongo.Cursor, tasks *[]*entity.Todo) ([]*entity.Todo, error) {
+
+	var list []*entity.Todo
+
+	for cur.Next(ctx) {
+		var t entity.Todo
+		err := cur.Decode(&t)
+		if err != nil {
+			return nil, err
+		}
+
+		list = append(*tasks, &t)
+	}
+	return list, nil
+}

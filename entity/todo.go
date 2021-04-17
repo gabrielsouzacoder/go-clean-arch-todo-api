@@ -13,6 +13,9 @@ type Todo struct {
 var ErrInvalidEntity = errors.New("invalid entity")
 
 func (t Todo) Validate() interface{} {
+	if t.Description == "" {
+		return ErrInvalidEntity
+	}
 	return nil
 }
 
