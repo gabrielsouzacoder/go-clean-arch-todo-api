@@ -1,0 +1,60 @@
+package todo
+
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+func TestCreateTodo(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	a, err := service.CreateTodo("Read books")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, a)
+}
+
+func TestCreateTodoWithError(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	a, err := service.CreateTodo("")
+
+	assert.NotNil(t, err)
+	assert.Nil(t, a)
+}
+
+func TestGetAllEmptyList(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	todos, _ := service.ListTodos()
+
+	assert.Equal(t, 0, len(todos))
+}
+
+func TestGetAllTodos(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	_, err := service.CreateTodo("Read a book")
+
+	if err != nil {
+		return
+	}
+
+	_, err = service.CreateTodo("Write a book")
+
+	if err != nil {
+		return
+	}
+
+	todos, err := service.ListTodos()
+
+	assert.Equal(t, 2, len(todos))
+}
