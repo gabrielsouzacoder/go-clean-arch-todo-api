@@ -34,16 +34,27 @@ func main() {
 
 	http.Handle("/", routers)
 
-	srv := &http.Server{
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		Addr:         ":8080",
-	}
+	srv := configureHttp()
 
 	err := srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+}
+
+func configureHttp() *http.Server {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
+
+	srv := &http.Server{
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		Addr:         ":" + port,
+	}
+	return srv
 }
 
 func loadEnvironment() {
