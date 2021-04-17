@@ -9,7 +9,7 @@ type Service struct {
 }
 
 func NewService(r Repository) *Service {
-	return &Service {
+	return &Service{
 		repo: r,
 	}
 }
@@ -24,11 +24,7 @@ func (s *Service) CreateTodo(description string) (*entity.ID, error) {
 }
 
 func (s *Service) ListTodos() ([]*entity.Todo, error) {
-	todos, err := s.repo.List()
-
-	if err != nil {
-		return nil, err
-	}
+	todos, _ := s.repo.List()
 
 	return todos, nil
 }
