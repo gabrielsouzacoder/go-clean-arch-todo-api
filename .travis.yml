@@ -7,8 +7,12 @@ script:
 - go test -v ./...  -race -coverprofile=coverage.txt -covermode=atomic
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
 deploy:
   provider: heroku
   api_key:
     secure: pAmewQZxPjnsZDmQDwvskRobrza2ijXyJSb65YmXIbz/vrO/hhma3gjmiEz3dKtHh3bPBMhbwT+krULObSBq3T4UtWNfP0Bkz7FOU6siIVnwV3XeCcfLpFJBGZ50hQVHYVfSfkK3MpQQdASRlXUoi8mCkIyC3dOi/ptbAQVzmjN9qBRBnnuCwaupM3FzQ3oNVUFyTzRF7QFqc4NdjrJmqVEX3obolBjKxHN3tUYeDtpEPnwrfH9t0Y5BSd22HL+GDWE3u2hYcH45wsUDBuf4Xg6aYuy+iStbWyu37pewVG+G2jsYYa8N3S8stIBvc1a0rfP7CjgrWuPKUE8h3iAwjilvksJLtlX2NPVXE/PiOUp+WE1/xnk7/uWOK/Rotb2Zr/bMgEQ5nDJl3sh0EVPTLsZSUUa12zakvc89sXi0YqMicMNo//uOqCcaS2tbXuAaCxUHOHWnEsY00v1bBAaXDaeGL9HX9DYPCP43rYiR4Bq12dC3/+eYCjo53WPq8P07wWGZU08K8X0cnKA+HqLdvbtsKIlxDgLvn7/U85VwfX2WVllu6XRTEBJ4T48XbrSs79lL+iYEA8NHcJnjwbmaFW0uTDZbXMoIGK9grR1voNnmOgz4DCgmeHVXtfYEZeuZnxOuq+1ta5Enuwtg1H9N5Jr5eNBlZC/04K/W/BnuYYo=
   app: go-clean-arch-todo
+  on:
+    branch: main
+
