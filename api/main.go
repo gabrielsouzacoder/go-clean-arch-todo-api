@@ -26,8 +26,12 @@ func main() {
 
 	routers := mux.NewRouter()
 
+	logger := negroni.NewLogger()
+
+	logger.SetFormat("[{{.Status}}] [{{.Duration}}] [{{.Path}}] [{{.Request.UserAgent}}]")
+
 	n := negroni.New(
-		negroni.NewLogger(),
+		logger,
 	)
 
 	handler.MakeTodoHandlers(routers, *n, todoService)
