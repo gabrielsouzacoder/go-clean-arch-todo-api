@@ -4,29 +4,25 @@ import (
 	"errors"
 )
 
-
 type Todo struct {
-	ID ID
+	ID          ID
 	Description string
-	Status bool
+	Status      bool
 }
 
 var ErrInvalidEntity = errors.New("invalid entity")
 
 func (t Todo) Validate() interface{} {
-	if t.Description == "" {
-		return ErrInvalidEntity
-	}
 	return nil
 }
 
 func NewTodo(description string, status bool) (*Todo, error) {
 	b := &Todo{
-		ID:        NewID(),
+		ID:          NewID(),
 		Description: description,
-		Status: status,
+		Status:      status,
 	}
-	
+
 	err := b.Validate()
 
 	if err != nil {
