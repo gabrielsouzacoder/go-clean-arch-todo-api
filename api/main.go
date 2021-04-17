@@ -60,7 +60,7 @@ func selectDatabase() todo.Repository {
 	var todoRepo todo.Repository
 
 	if dbType == "mongo" {
-		todoRepo = repository.NewMongoDbRepository(options.Client().ApplyURI("mongodb://localhost:27017/"))
+		todoRepo = repository.NewMongoDbRepository(options.Client().ApplyURI(os.Getenv("MONGO_URI")))
 	} else {
 		todoRepo = repository.NewInMemoryDatabase()
 	}
