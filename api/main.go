@@ -2,59 +2,24 @@ package main
 
 import (
 	"fmt"
-	"github.com/gabrielsouzacoder/clean-new/api/handler"
+	"github.com/gabrielsouzacoder/clean-new/api/routes"
 	"github.com/gabrielsouzacoder/clean-new/infrastructure/repository"
 	"github.com/gabrielsouzacoder/clean-new/usecase/todo"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/urfave/negroni"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"net/http"
 	"os"
-	"time"
 )
 
 func main() {
 	fmt.Println("[Server] Initializing ...")
-
 	loadEnvironment()
-
 	todoRepo := selectDatabase()
-
 	todoService := todo.NewService(todoRepo)
 
-	routers := mux.NewRouter()
-
-	n := negroni.New(
-		negroni.NewLogger(),
-	)
-
-	handler.MakeTodoHandlers(routers, *n, todoService)
-
-	http.Handle("/", routers)
-
-	srv := configureHttp()
-
-	err := srv.ListenAndServe()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-}
-
-func configureHttp() *http.Server {
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		port = "8080"
-	}
-
-	srv := &http.Server{
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		Addr:         ":" + port,
-	}
-	return srv
+	server := NewServer()
+	server.Run(todoService)
 }
 
 func loadEnvironment() {
@@ -63,6 +28,25 @@ func loadEnvironment() {
 	if err != nil {
 		log.Println("[Warning] The .env file could not be loaded")
 	}
+}
+
+type Server struct {
+	port   string
+	server *gin.Engine
+}
+
+func NewServer() Server {
+	return Server{
+		port:   "8080",
+		server: gin.Default(),
+	}
+}
+
+func (s *Server) Run(todo *todo.Service) {
+	router := routes.ConfigRoutes(s.server, todo)
+
+	log.Printf("Server running at port: %v", s.port)
+	log.Fatal(router.Run(":" + s.port))
 }
 
 func selectDatabase() todo.Repository {

@@ -15,7 +15,7 @@ func NewService(r Repository) *Service {
 }
 
 func (s *Service) CreateTodo(description string) (*entity.ID, error) {
-	b, err := entity.NewTodo(description, false)
+	b, err := entity.NewTodo(description, true)
 
 	if err != nil {
 		return nil, err
