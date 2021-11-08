@@ -37,11 +37,13 @@ func NewMongoDbRepository(clientOptions *options.ClientOptions) *MongoDb {
 }
 
 func (r *MongoDb) Create(e *entity.Todo) (*entity.ID, error) {
-	_, _ = r.db.InsertOne(ctx, e)
+	_, err := r.db.InsertOne(ctx, e)
 
-	var s = new(*entity.ID)
+	if err != nil {
+		return nil, err
+	}
 
-	return *s, nil
+	return &e.ID, nil
 }
 
 func (r *MongoDb) List() ([]*entity.Todo, error) {
@@ -63,7 +65,7 @@ func (r *MongoDb) List() ([]*entity.Todo, error) {
 		return nil, err
 	}
 
-	return tasks, nil
+	return todos, nil
 }
 
 func addToList(cur *mongo.Cursor, tasks *[]*entity.Todo) ([]*entity.Todo, error) {
@@ -80,4 +82,31 @@ func addToList(cur *mongo.Cursor, tasks *[]*entity.Todo) ([]*entity.Todo, error)
 		list = append(*tasks, &t)
 	}
 	return list, nil
+}
+
+func (r *MongoDb) Delete(id *entity.ID) error {
+	_, err := r.db.DeleteOne(ctx, bson.D{{
+		"id", *id,
+	}})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *MongoDb) FindById(id *entity.ID) *entity.Todo {
+
+	var t *entity.Todo
+
+	err := r.db.FindOne(ctx, bson.D{{
+		"id", *id,
+	}}).Decode(&t)
+
+	if err != nil {
+		return nil
+	}
+
+	return t
 }

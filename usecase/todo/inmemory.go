@@ -1,6 +1,8 @@
 package todo
 
-import "github.com/gabrielsouzacoder/clean-new/entity"
+import (
+	"github.com/gabrielsouzacoder/clean-new/entity"
+)
 
 type InMemory struct {
 	m map[entity.ID]*entity.Todo
@@ -26,4 +28,23 @@ func (r *InMemory) List() ([]*entity.Todo, error) {
 	}
 
 	return d, nil
+}
+
+func (r *InMemory) Delete(id *entity.ID) error {
+	for _, j := range r.m {
+		if *id == j.ID {
+			delete(r.m, *id)
+		}
+	}
+	return nil
+}
+
+func (r *InMemory) FindById(id *entity.ID) *entity.Todo {
+	for _, j := range r.m {
+		if *id == j.ID {
+			return j
+		}
+	}
+
+	return nil
 }

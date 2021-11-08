@@ -1,6 +1,7 @@
 package todo
 
 import (
+	"github.com/gabrielsouzacoder/clean-new/entity"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -57,4 +58,42 @@ func TestGetAllTodos(t *testing.T) {
 	todos, err := service.ListTodos()
 
 	assert.Equal(t, 2, len(todos))
+}
+
+func TestDeleteTodo(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	data, _ := service.CreateTodo("Read a book")
+
+	service.DeleteTodo(data)
+
+	todos, _ := service.ListTodos()
+
+	assert.Equal(t, 0, len(todos))
+}
+
+func TestFindById(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	data, _ := service.CreateTodo("Read a book")
+
+	todoById := service.FindById(data)
+
+	assert.Equal(t, todoById.Description, "Read a book")
+}
+
+func TestFindByIdNotFound(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	id := entity.NewID()
+
+	todoById := service.FindById(&id)
+
+	assert.Nil(t, todoById)
 }

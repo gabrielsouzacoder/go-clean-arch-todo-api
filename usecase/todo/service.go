@@ -28,3 +28,13 @@ func (s *Service) ListTodos() ([]*entity.Todo, error) {
 
 	return todos, nil
 }
+
+func (s *Service) DeleteTodo(id *entity.ID) {
+	_ = s.repo.Delete(id)
+}
+
+func (s *Service) FindById(id *entity.ID) *entity.Todo {
+	todo := s.repo.FindById(id)
+
+	return todo
+}
