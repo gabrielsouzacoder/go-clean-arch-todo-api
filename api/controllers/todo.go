@@ -68,3 +68,24 @@ func FindById(service *todo.Service) gin.HandlerFunc {
 
 	return fn
 }
+
+func UpdateTodo(service *todo.Service) gin.HandlerFunc {
+	fn := func(c *gin.Context) {
+		var todoDto presenter.Todo
+
+		err := c.ShouldBindJSON(&todoDto)
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"error": "cannot bind JSON: " + err.Error(),
+			})
+			return
+		}
+
+		updated := service.UpdateTodo(todoDto.ToTodo())
+
+		c.JSON(200, updated)
+	}
+
+	return fn
+}

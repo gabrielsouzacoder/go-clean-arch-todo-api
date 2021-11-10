@@ -15,6 +15,7 @@ type Writer interface {
 type Repository interface {
 	Reader
 	Writer
+	Update(todo *entity.Todo) *entity.Todo
 }
 
 type UseCase interface {

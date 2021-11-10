@@ -97,3 +97,19 @@ func TestFindByIdNotFound(t *testing.T) {
 
 	assert.Nil(t, todoById)
 }
+
+func TestUpdateTodo(t *testing.T) {
+	repo := NewInMemoryDatabase()
+
+	service := NewService(repo)
+
+	idCreated, _ := service.CreateTodo("Test of Todo")
+
+	created := service.FindById(idCreated)
+
+	created.Description = "New Description"
+
+	todoUpdated := service.UpdateTodo(created)
+
+	assert.Equal(t, todoUpdated.Description, "New Description")
+}

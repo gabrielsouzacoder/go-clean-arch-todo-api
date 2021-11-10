@@ -15,6 +15,7 @@ func ConfigRoutes(router *gin.Engine, service *todo.Service) *gin.Engine {
 			todos.GET("/:id", controllers.FindById(service))
 			todos.POST("/", controllers.CreateTodo(service))
 			todos.DELETE("/:id", controllers.DeleteTodo(service))
+			todos.PUT("/", controllers.UpdateTodo(service))
 		}
 	}
 	return router

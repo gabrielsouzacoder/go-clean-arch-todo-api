@@ -38,3 +38,9 @@ func (s *Service) FindById(id *entity.ID) *entity.Todo {
 
 	return todo
 }
+
+func (s *Service) UpdateTodo(todo *entity.Todo) *entity.Todo {
+	updated := s.repo.Update(todo)
+
+	return updated
+}

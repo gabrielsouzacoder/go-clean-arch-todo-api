@@ -110,3 +110,27 @@ func (r *MongoDb) FindById(id *entity.ID) *entity.Todo {
 
 	return t
 }
+
+func (r *MongoDb) Update(todo *entity.Todo) *entity.Todo {
+	var t *entity.Todo
+
+	_ = r.db.FindOne(ctx, bson.D{{
+		"id", todo.ID,
+	}}).Decode(&t)
+
+	fmt.Println(t)
+
+	_, err := r.db.UpdateOne(ctx, bson.D{{
+		"id", todo.ID,
+	}}, bson.M{"$set": bson.M{
+		"description": todo.Description,
+		"status":      todo.Status,
+	},
+	})
+
+	if err != nil {
+		return nil
+	}
+
+	return todo
+}

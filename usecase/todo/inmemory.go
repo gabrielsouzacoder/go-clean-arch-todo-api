@@ -16,6 +16,12 @@ func NewInMemoryDatabase() *InMemory {
 	}
 }
 
+func (r *InMemory) Update(todo *entity.Todo) *entity.Todo {
+	r.m[todo.ID] = todo
+
+	return r.m[todo.ID]
+}
+
 func (r *InMemory) Create(e *entity.Todo) (*entity.ID, error) {
 	r.m[e.ID] = e
 	return &e.ID, nil
